@@ -4,6 +4,21 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## 1.6.0
+
+### Added
+
+- **Stateful Card.** New optional props, all composable:
+  - `loading` — spinner overlay over content (`aria-busy`), no layout jump.
+  - `disabled` — dims and fully locks the subtree, mouse *and* keyboard (`inert`).
+  - `interactive` — hover elevation + focus ring + keyboard activation.
+  - `selected` — highlight ring for choice/plan pickers.
+  - `tone` — status accent stripe (`info`/`success`/`warning`/`critical`).
+  - `asChild` — render the whole card as a link/button.
+- **`CardSkeleton`** — card-shaped placeholder for initial load.
+- **`ErrorState`** — centered async-failure state with a built-in retry, the
+  error counterpart to `EmptyState`.
+
 ## 1.5.0
 
 ### Added

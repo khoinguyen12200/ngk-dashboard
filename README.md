@@ -109,6 +109,54 @@ and `icon` / `iconRight`:
 Pair this with `DashboardLayout` (the app shell) below: the sidebar/header wrap
 the app, and each screen renders a `Page` inside it.
 
+## Card states
+
+The Card carries its own interactive states, so you don't hand-wire overlays.
+
+```tsx
+import { Card, CardHeader, CardTitle, CardContent, CardSkeleton, ErrorState } from 'ngk-dashboard'
+
+// 1. Initial load — no content yet:
+{isLoading ? <CardSkeleton lines={4} /> : <Card>…</Card>}
+
+// 2. Refreshing in place — spinner overlay, content stays, layout doesn't jump:
+<Card loading={isRefetching}>
+  <CardHeader><CardTitle>Revenue</CardTitle></CardHeader>
+  <CardContent>{chart}</CardContent>
+</Card>
+
+// 3. Saving — spinner + lock the whole card (mouse AND keyboard, via `inert`):
+<Card loading={saving} disabled={saving}>
+  <form>…</form>
+</Card>
+
+// 4. Async failure — a retry state:
+{error
+  ? <ErrorState onRetry={refetch}>Couldn't load orders.</ErrorState>
+  : <Card>…</Card>}
+
+// 5. Selectable / clickable (plan pickers, drill-downs):
+<Card interactive selected={plan === 'pro'} onClick={() => setPlan('pro')}>…</Card>
+<Card asChild interactive><a href="/orders/1024">…</a></Card>   {/* whole card is a link */}
+
+// 6. Needs-attention accent stripe:
+<Card tone="warning">…</Card>   {/* default | info | success | warning | critical */}
+```
+
+**Prop summary** (all optional, all compose):
+
+| Prop | What it does |
+|---|---|
+| `loading` | Spinner overlay over content; sets `aria-busy` |
+| `disabled` | Dims + fully locks the subtree (mouse + keyboard, via `inert`) |
+| `interactive` | Hover elevation, focus ring, pointer/keyboard activation |
+| `selected` | Highlight ring (choice/plan cards) |
+| `tone` | Left status stripe: `info`/`success`/`warning`/`critical` |
+| `asChild` | Render the card as its child (e.g. wrap in a link) |
+
+Related: `CardSkeleton` (initial load), `ErrorState` (async failure + retry),
+`SkeletonPage` (whole-page loading), `EmptyState` (zero results).
+
 ## Theme it once
 
 Define your design basics in one place and everything beneath inherits them —

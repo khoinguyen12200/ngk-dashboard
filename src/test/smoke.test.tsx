@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { render } from '@testing-library/react'
 import {
   Accordion,
@@ -19,6 +19,7 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
+  CardSkeleton,
   Checkbox,
   Input,
   Label,
@@ -39,6 +40,7 @@ import {
   Text,
   Banner,
   EmptyState,
+  ErrorState,
   SkeletonPage,
   StatCard,
 } from '@/index'
@@ -170,6 +172,50 @@ describe('components render without crashing', () => {
     expect(getByText('Revenue')).toBeInTheDocument()
     expect(getByText('$12,480')).toBeInTheDocument()
     expect(getByText('+12.5%')).toBeInTheDocument()
+  })
+
+  it('Card supports loading, disabled, selected, interactive, and tone', () => {
+    const onClick = vi.fn()
+    const { container, getByRole } = render(
+      <div>
+        <Card loading data-testid='c1'>
+          <CardContent>Refreshing</CardContent>
+        </Card>
+        <Card disabled data-testid='c2'>
+          <CardContent>Locked</CardContent>
+        </Card>
+        <Card selected tone='success'>
+          <CardContent>Chosen</CardContent>
+        </Card>
+        <Card interactive onClick={onClick}>
+          <CardContent>Clickable</CardContent>
+        </Card>
+      </div>
+    )
+    expect(
+      container.querySelector('[data-slot="card-loading"]')
+    ).toBeInTheDocument()
+    expect(container.querySelector('[data-testid="c2"]')).toHaveAttribute(
+      'data-disabled'
+    )
+    const clickable = getByRole('button')
+    clickable.click()
+    expect(onClick).toHaveBeenCalled()
+  })
+
+  it('renders an ErrorState with a working retry', () => {
+    const onRetry = vi.fn()
+    const { getByText, getByRole } = render(
+      <ErrorState onRetry={onRetry}>Could not load orders.</ErrorState>
+    )
+    expect(getByText('Something went wrong')).toBeInTheDocument()
+    getByRole('button', { name: 'Try again' }).click()
+    expect(onRetry).toHaveBeenCalledOnce()
+  })
+
+  it('renders a CardSkeleton', () => {
+    const { container } = render(<CardSkeleton lines={4} />)
+    expect(container.querySelectorAll('[data-slot="skeleton"]').length).toBe(6)
   })
 
   it('SaveBar shows Save/Discard when open and nothing when closed', () => {
