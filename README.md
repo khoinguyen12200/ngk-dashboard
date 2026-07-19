@@ -75,6 +75,209 @@ Helpers: `cn`, `useIsMobile`, `getPageNumbers`, `getDisplayNameInitials`,
 - The theme references the **Inter** and **Manrope** font families but does not
   bundle them. Load them in your app if you want that exact look; otherwise it
   falls back to the system sans-serif.
+- The simple primitives (Button, Card, Input, Dialog, Tabs, …) are used exactly
+  like [shadcn/ui](https://ui.shadcn.com/docs/components) — just import them
+  from `ngk-dashboard` instead of copying files. TypeScript types cover the
+  props. The recipes below are only for the components that need extra setup.
+
+## Recipes
+
+Some components wrap a third-party library that ships **with** ngk-dashboard
+(no extra install needed) but that you import hooks/types from directly:
+`react-hook-form` (Form), `@tanstack/react-table` (DataTable),
+`recharts` (Chart), `date-fns` (DatePicker).
+
+### Toasts
+
+Render `<Toaster />` once near your app root, then call `toast()` anywhere:
+
+```tsx
+import { Toaster, Button, toast } from 'ngk-dashboard'
+
+function App() {
+  return (
+    <>
+      <Button onClick={() => toast.success('Saved!')}>Save</Button>
+      <Toaster theme='system' />
+    </>
+  )
+}
+```
+
+### Form (react-hook-form)
+
+```tsx
+import { useForm } from 'react-hook-form'
+import {
+  Form, FormField, FormItem, FormLabel, FormControl, FormMessage,
+  Input, Button,
+} from 'ngk-dashboard'
+
+export function ProfileForm() {
+  const form = useForm({ defaultValues: { username: '' } })
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit((v) => console.log(v))}>
+        <FormField
+          control={form.control}
+          name='username'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Username</FormLabel>
+              <FormControl>
+                <Input placeholder='ada' {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type='submit'>Submit</Button>
+      </form>
+    </Form>
+  )
+}
+```
+
+### Chart (Recharts)
+
+Wrap Recharts primitives in `ChartContainer` and pass a `ChartConfig` that maps
+each series to a label and color (use the built-in `--chart-1…5` tokens):
+
+```tsx
+import { Bar, BarChart, XAxis } from 'recharts'
+import {
+  ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig,
+} from 'ngk-dashboard'
+
+const data = [
+  { month: 'Jan', sales: 186 },
+  { month: 'Feb', sales: 305 },
+]
+
+const config = {
+  sales: { label: 'Sales', color: 'var(--chart-1)' },
+} satisfies ChartConfig
+
+export function SalesChart() {
+  return (
+    <ChartContainer config={config} className='h-64 w-full'>
+      <BarChart data={data}>
+        <XAxis dataKey='month' />
+        <ChartTooltip content={<ChartTooltipContent />} />
+        <Bar dataKey='sales' fill='var(--color-sales)' radius={4} />
+      </BarChart>
+    </ChartContainer>
+  )
+}
+```
+
+### DataTable (TanStack Table)
+
+The `DataTable*` components are composable pieces, not one component. You own
+the table instance (`useReactTable`) and drop the toolbar/pagination around a
+plain `<Table>`:
+
+```tsx
+import {
+  useReactTable, getCoreRowModel, getFilteredRowModel,
+  getPaginationRowModel, flexRender, type ColumnDef,
+} from '@tanstack/react-table'
+import {
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+  DataTableToolbar, DataTablePagination,
+} from 'ngk-dashboard'
+
+type Person = { name: string; role: string }
+
+const columns: ColumnDef<Person>[] = [
+  { accessorKey: 'name', header: 'Name' },
+  { accessorKey: 'role', header: 'Role' },
+]
+
+export function PeopleTable({ data }: { data: Person[] }) {
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  })
+
+  return (
+    <div className='space-y-4'>
+      <DataTableToolbar table={table} searchKey='name' />
+      <Table>
+        <TableHeader>
+          {table.getHeaderGroups().map((hg) => (
+            <TableRow key={hg.id}>
+              {hg.headers.map((h) => (
+                <TableHead key={h.id}>
+                  {flexRender(h.column.columnDef.header, h.getContext())}
+                </TableHead>
+              ))}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows.map((row) => (
+            <TableRow key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <TableCell key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <DataTablePagination table={table} />
+    </div>
+  )
+}
+```
+
+`DataTableToolbar` also accepts `filters` (faceted filters) and
+`searchPlaceholder`; `DataTableColumnHeader`, `DataTableViewOptions`, and
+`DataTableBulkActions` are available for richer tables.
+
+### DatePicker
+
+Controlled — you hold the `Date` in state:
+
+```tsx
+import { useState } from 'react'
+import { DatePicker } from 'ngk-dashboard'
+
+export function Example() {
+  const [date, setDate] = useState<Date>()
+  return <DatePicker selected={date} onSelect={setDate} placeholder='Pick a date' />
+}
+```
+
+### Sidebar
+
+Wrap the app in `SidebarProvider`; use `SidebarTrigger` to toggle it:
+
+```tsx
+import {
+  SidebarProvider, Sidebar, SidebarContent, SidebarTrigger,
+} from 'ngk-dashboard'
+
+export function Shell({ children }: { children: React.ReactNode }) {
+  return (
+    <SidebarProvider>
+      <Sidebar>
+        <SidebarContent>{/* menu items */}</SidebarContent>
+      </Sidebar>
+      <main>
+        <SidebarTrigger />
+        {children}
+      </main>
+    </SidebarProvider>
+  )
+}
+```
 
 ## Develop
 
