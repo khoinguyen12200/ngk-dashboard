@@ -46,6 +46,8 @@ export * from './components/ui/textarea'
 export * from './components/ui/toggle'
 export * from './components/ui/toggle-group'
 export * from './components/ui/tooltip'
+// Layout — ready-made dashboard shell + router-neutral pieces
+export * from './components/layout'
 // Composed components
 export * from './components/data-table'
 export { ConfirmDialog } from './components/confirm-dialog'

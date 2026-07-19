@@ -49,6 +49,72 @@ document.documentElement.classList.toggle('dark')
 
 Everything flips automatically. There's no theme provider to wire up.
 
+## Dashboard layout
+
+Don't assemble the shell yourself — `DashboardLayout` gives you a themed
+sidebar + header + content area from a nav config. Pass `nav` and `children`
+and you have a working dashboard; everything else is optional.
+
+```tsx
+import { DashboardLayout, Button } from 'ngk-dashboard'
+import { LayoutDashboard, Settings, Users } from 'lucide-react'
+
+const nav = [
+  {
+    title: 'General',
+    items: [
+      { title: 'Dashboard', href: '/', icon: LayoutDashboard },
+      { title: 'Users', href: '/users', icon: Users, badge: 4 },
+      {
+        title: 'Settings',
+        icon: Settings,
+        items: [
+          { title: 'Profile', href: '/settings/profile' },
+          { title: 'Billing', href: '/settings/billing' },
+        ],
+      },
+    ],
+  },
+]
+
+export function App() {
+  return (
+    <DashboardLayout
+      nav={nav}
+      logo={<span className='px-2 font-semibold'>Acme</span>}
+      headerEnd={<Button size='sm'>New</Button>}
+    >
+      <h1>Welcome</h1>
+    </DashboardLayout>
+  )
+}
+```
+
+It is **router-neutral**. By default links are plain `<a>` tags (full-page
+navigation). To get client-side routing and active highlighting, pass
+`renderLink` and `currentPath`:
+
+```tsx
+import { Link, useRouterState } from '@tanstack/react-router'
+
+<DashboardLayout
+  nav={nav}
+  currentPath={useRouterState({ select: (s) => s.location.pathname })}
+  renderLink={({ href, className, children, onClick, ...rest }) => (
+    <Link to={href} className={className} onClick={onClick} {...rest}>
+      {children}
+    </Link>
+  )}
+>
+  {/* … */}
+</DashboardLayout>
+```
+
+The same `renderLink` shape works for React Router (`<Link to={href}>`) or
+Next (`<Link href={href}>`). Prefer to build your own shell? The pieces are
+exported too: `Header`, `Main`, `NavGroup`, `TopNav`, plus the `Sidebar*`
+primitives.
+
 ## What's included
 
 Full shadcn/ui parity — every primitive in the registry:
@@ -59,6 +125,9 @@ ContextMenu, Dialog, Drawer, DropdownMenu, Form, HoverCard, Input, InputOTP,
 Label, Menubar, NavigationMenu, Pagination, Popover, Progress, RadioGroup,
 Resizable, ScrollArea, Select, Separator, Sheet, Sidebar, Skeleton, Slider,
 Switch, Table, Tabs, Textarea, Toaster (Sonner), Toggle, ToggleGroup, Tooltip.
+
+Layout: DashboardLayout (ready-made shell) plus the router-neutral pieces
+Header, Main, NavGroup, TopNav.
 
 Composed dashboard components: DataTable (TanStack Table — column header,
 toolbar, faceted filter, view options, pagination, bulk actions), DatePicker,
