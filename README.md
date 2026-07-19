@@ -231,7 +231,8 @@ Switch, Table, Tabs, Textarea, Toaster (Sonner), Toggle, ToggleGroup, Tooltip.
 Layout: DashboardLayout (ready-made shell) plus the router-neutral pieces
 Header, Main, NavGroup, TopNav. Page scaffolding: Page, Layout/Layout.Section,
 PageActions. Content primitives: BlockStack, InlineStack (gap-based spacing),
-Text (type scale), Banner, EmptyState, SkeletonPage. Theming: ThemeProvider.
+Text (type scale), Banner, EmptyState, SkeletonPage, StatCard (KPI). Theming:
+ThemeProvider. `Layout.Section` supports a `sticky` right-hand aside.
 
 Composed dashboard components: DataTable (TanStack Table — column header,
 toolbar, faceted filter, view options, pagination, bulk actions), DatePicker,

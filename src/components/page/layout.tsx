@@ -24,10 +24,16 @@ function LayoutRoot({ className, ...props }: React.ComponentProps<'div'>) {
 export interface LayoutSectionProps extends React.ComponentProps<'div'> {
   /** `oneThird`/`oneHalf` make a narrower column (the right aside); default fills. */
   variant?: 'full' | 'oneHalf' | 'oneThird'
+  /**
+   * Pin the section in view while the rest of the page scrolls (desktop only) —
+   * the Shopify pattern for a right-hand aside next to a long main column.
+   */
+  sticky?: boolean
 }
 
 function LayoutSection({
   variant = 'full',
+  sticky = false,
   className,
   ...props
 }: LayoutSectionProps) {
@@ -40,6 +46,7 @@ function LayoutSection({
         variant === 'full' && 'flex-1',
         variant === 'oneHalf' && 'w-full lg:w-1/2',
         variant === 'oneThird' && 'w-full shrink-0 lg:w-1/3 lg:max-w-sm',
+        sticky && 'lg:sticky lg:top-6 lg:self-start',
         className
       )}
       {...props}

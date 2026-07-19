@@ -4,6 +4,17 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## 1.4.0
+
+### Added
+
+- **`StatCard`** — prebuilt KPI card: label, big metric, and a colored trend
+  delta (`up`/`down`/`neutral`) with an arrow, plus optional `icon` and
+  `helpText`. The dashboard staple, one component.
+- **`Layout.Section` `sticky` prop** — pins a section in view while the page
+  scrolls (desktop), for a Shopify-style right-hand aside next to a long main
+  column.
+
 ## 1.3.0
 
 ### Added

@@ -39,6 +39,7 @@ import {
   Banner,
   EmptyState,
   SkeletonPage,
+  StatCard,
 } from '@/index'
 
 // Render smoke tests: every one of these must mount without throwing. Cheap,
@@ -159,5 +160,14 @@ describe('components render without crashing', () => {
   it('renders a SkeletonPage', () => {
     const { container } = render(<SkeletonPage primaryAction sections={2} />)
     expect(container.querySelector('[data-slot="skeleton-page"]')).toBeTruthy()
+  })
+
+  it('renders a StatCard with a trend delta', () => {
+    const { getByText } = render(
+      <StatCard label='Revenue' value='$12,480' delta='+12.5%' trend='up' />
+    )
+    expect(getByText('Revenue')).toBeInTheDocument()
+    expect(getByText('$12,480')).toBeInTheDocument()
+    expect(getByText('+12.5%')).toBeInTheDocument()
   })
 })
