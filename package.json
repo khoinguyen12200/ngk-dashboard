@@ -1,6 +1,6 @@
 {
   "name": "ngk-dashboard",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "A ready-to-use React component library: themed shadcn/ui primitives with dark mode baked in. Install, import one stylesheet, and go.",
   "license": "MIT",
   "author": "khoinguyen12200",

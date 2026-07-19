@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## 1.5.0
+
+### Added
+
+- **`SaveBar`** — contextual save bar (the Shopify/Polaris pattern). Pin it at
+  the top of a page and open it when a form goes dirty; it offers Discard + Save
+  (with a loading state). Controlled via `open` — pair it with your form state,
+  e.g. react-hook-form's `formState.isDirty`. On the `ngk-dashboard/page` subpath.
+
 ## 1.4.0
 
 ### Added

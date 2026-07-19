@@ -32,6 +32,7 @@ import {
   Page,
   Layout,
   PageActions,
+  SaveBar,
   ThemeProvider,
   BlockStack,
   InlineStack,
@@ -169,5 +170,14 @@ describe('components render without crashing', () => {
     expect(getByText('Revenue')).toBeInTheDocument()
     expect(getByText('$12,480')).toBeInTheDocument()
     expect(getByText('+12.5%')).toBeInTheDocument()
+  })
+
+  it('SaveBar shows Save/Discard when open and nothing when closed', () => {
+    const { queryByText, rerender } = render(<SaveBar open={false} />)
+    expect(queryByText('Save')).toBeNull()
+    rerender(<SaveBar open message='Unsaved changes' />)
+    expect(queryByText('Unsaved changes')).toBeInTheDocument()
+    expect(queryByText('Save')).toBeInTheDocument()
+    expect(queryByText('Discard')).toBeInTheDocument()
   })
 })
