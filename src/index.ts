@@ -50,6 +50,8 @@ export * from './components/ui/tooltip'
 export * from './components/layout'
 // Page — Polaris-style page header + in-page column layout + action bars
 export * from './components/page'
+// Theme — define brand color / radius / font once for the whole subtree
+export * from './components/theme'
 // Composed components
 export * from './components/data-table'
 export { ConfirmDialog } from './components/confirm-dialog'

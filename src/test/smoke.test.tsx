@@ -32,6 +32,7 @@ import {
   Page,
   Layout,
   PageActions,
+  ThemeProvider,
 } from '@/index'
 
 // Render smoke tests: every one of these must mount without throwing. Cheap,
@@ -111,5 +112,22 @@ describe('components render without crashing', () => {
     expect(getByText('Export')).toBeInTheDocument()
     expect(getByText('Main')).toBeInTheDocument()
     expect(getByText('Aside')).toBeInTheDocument()
+  })
+
+  it('ThemeProvider sets brand CSS variables on its subtree', () => {
+    const { getByTestId } = render(
+      <ThemeProvider
+        primary='#5b5bd6'
+        radius='0.5rem'
+        font='Inter, sans-serif'
+        data-testid='theme'
+      >
+        <Button>Branded</Button>
+      </ThemeProvider>
+    )
+    const root = getByTestId('theme')
+    expect(root.style.getPropertyValue('--primary')).toBe('#5b5bd6')
+    expect(root.style.getPropertyValue('--radius')).toBe('0.5rem')
+    expect(root.style.fontFamily).toBe('Inter, sans-serif')
   })
 })

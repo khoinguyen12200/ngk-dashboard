@@ -109,6 +109,37 @@ and `icon` / `iconRight`:
 Pair this with `DashboardLayout` (the app shell) below: the sidebar/header wrap
 the app, and each screen renders a `Page` inside it.
 
+## Theme it once
+
+Define your design basics in one place and everything beneath inherits them —
+Card, Button, Separator, inputs, the layout, all of it. `primary` is usually the
+only value you need; it drives buttons, links, focus rings, and active nav.
+
+```tsx
+import { ThemeProvider } from 'ngk-dashboard'
+
+<ThemeProvider
+  primary='#5b5bd6'        // any CSS color; the whole accent system derives from it
+  radius='0.5rem'
+  font='Inter, sans-serif'
+  inline                    // no layout box — wrap your whole app
+>
+  <App />
+</ThemeProvider>
+```
+
+`ThemeProvider` also accepts `secondary`, `accent`, `destructive`, `background`,
+`foreground`, `border`, and a `tokens={{ … }}` escape hatch for any other token.
+
+Prefer zero runtime? Set the same variables in your global CSS — no provider:
+
+```css
+:root {
+  --primary: #5b5bd6;
+  --radius: 0.5rem;
+}
+```
+
 ## Dark mode
 
 The theme ships as CSS variables plus a `.dark` variant. Toggle dark mode by

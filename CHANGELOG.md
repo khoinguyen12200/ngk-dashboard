@@ -4,6 +4,22 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## 1.2.0
+
+### Added
+
+- **`ThemeProvider` — define your design basics once.** Wrap the app (or any
+  subtree) and set `primary`, `radius`, `font`, and other tokens; the CSS
+  variables cascade to every component beneath. `inline` applies them with no
+  layout box. Available on the `ngk-dashboard/theme` subpath. A zero-runtime CSS
+  override still works too.
+
+### Changed
+
+- `--ring` (focus ring) and the sidebar accent tokens now derive from
+  `--primary`, so overriding the brand color alone rebrands buttons, links,
+  focus rings, and active nav together.
+
 ## 1.1.0
 
 ### Added
