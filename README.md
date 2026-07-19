@@ -2,6 +2,11 @@
 
 A ready-to-use React component library. Themed [shadcn/ui](https://ui.shadcn.com) primitives with dark mode baked in — install, import one stylesheet, and use the components. No Tailwind or shadcn setup required in your app.
 
+> **Building a dashboard?** Read **[BEST_PRACTICES.md](./BEST_PRACTICES.md)** —
+> the opinionated guide to using this package the right way (setup, screen
+> anatomy, forms, data states, actions, theming). The sections below are the
+> per-feature reference.
+
 ## Install
 
 ```bash
