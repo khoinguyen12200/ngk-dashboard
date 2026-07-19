@@ -64,6 +64,14 @@ npm run build       # produces dist/index.js, dist/index.d.ts, dist/styles.css
 
 `/verify` runs both. When adding a primitive, prefer `/add-component`.
 
+## Releasing
+
+Publishing is automated — never run `npm publish` by hand. Pushing a `v*.*.*`
+tag triggers `.github/workflows/publish.yml` (typecheck → build → publish with
+provenance), authenticated by the `NPM_TOKEN` repo secret. To cut a release:
+`npm version <patch|minor|major>` then `git push --follow-tags`, or run
+`/release`. The tag must match `package.json`'s version or the workflow fails.
+
 ## Gotchas
 
 - New utility classes only ship if the file matches the `@source` globs in

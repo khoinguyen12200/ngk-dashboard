@@ -355,6 +355,29 @@ npm install
 npm run build      # builds dist/index.js, dist/index.d.ts, dist/styles.css
 ```
 
+## Releasing
+
+Publishing is automated via GitHub Actions — no manual `npm publish`. Pushing a
+`v*.*.*` tag runs `.github/workflows/publish.yml`, which typechecks, builds, and
+publishes (with npm provenance).
+
+```bash
+npm version patch        # bumps package.json + creates the matching v* tag
+git push --follow-tags   # CI publishes on the tag
+```
+
+The tag must match the version in `package.json` (the workflow enforces this).
+
+**One-time setup** — add an npm token as a repo secret so CI can authenticate:
+
+1. Create an **Automation** token at npmjs.com → Access Tokens → Generate Token
+   → *Automation* (this type bypasses 2FA; a Granular token with "bypass 2FA"
+   also works). It needs read-write publish access to `ngk-dashboard`.
+2. In the GitHub repo → Settings → Secrets and variables → Actions → New
+   repository secret, name it **`NPM_TOKEN`** and paste the token.
+
+That's it — every tagged release publishes itself.
+
 ## License
 
 MIT
