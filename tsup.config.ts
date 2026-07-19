@@ -11,6 +11,7 @@ export default defineConfig({
     'src/components/*.tsx',
     'src/components/data-table/index.ts',
     'src/components/layout/index.ts',
+    'src/components/page/index.ts',
     'src/lib/utils.ts',
     'src/hooks/use-mobile.tsx',
     // Never build test files.

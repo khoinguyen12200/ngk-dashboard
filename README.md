@@ -60,6 +60,55 @@ importing `ngk-dashboard/styles.css` is safe next to Polaris, a storefront, or
 any app with its own global CSS — it won't reset your margins, headings, or box
 sizing.
 
+## Page & Layout (Polaris-style)
+
+Prebuilt page scaffolding so a screen is a few lines. `Page` gives you the title
+bar + actions; `Layout` gives you a main column with a smaller aside on the
+right (stacks on mobile). Describe actions as `{ content, onClick }` and it
+builds the themed buttons for you.
+
+```tsx
+import { Page, Layout, PageActions, Card, CardContent } from 'ngk-dashboard'
+
+export function OrderPage() {
+  return (
+    <Page
+      title='Order #1024'
+      subtitle='Placed today'
+      backAction={{ href: '/orders' }}
+      primaryAction={{ content: 'Save', onClick: save }}
+      secondaryActions={[{ content: 'Export' }, { content: 'Delete' }]}
+    >
+      <Layout>
+        <Layout.Section>
+          <Card>
+            <CardContent>Line items, timeline…</CardContent>
+          </Card>
+        </Layout.Section>
+        <Layout.Section variant='oneThird'>
+          <Card>
+            <CardContent>Customer, notes…</CardContent>
+          </Card>
+        </Layout.Section>
+      </Layout>
+
+      <PageActions primaryAction={{ content: 'Save', onClick: save }} />
+    </Page>
+  )
+}
+```
+
+`Layout.Section` variants: default (fills), `oneHalf`, `oneThird` (the aside).
+Buttons also gained Polaris-like conveniences — `loading` (spinner + disabled)
+and `icon` / `iconRight`:
+
+```tsx
+<Button loading={saving} icon={Save}>Save</Button>
+```
+
+Pair this with `DashboardLayout` (the app shell) below: the sidebar/header wrap
+the app, and each screen renders a `Page` inside it.
+
 ## Dark mode
 
 The theme ships as CSS variables plus a `.dark` variant. Toggle dark mode by

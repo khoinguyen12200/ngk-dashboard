@@ -48,6 +48,8 @@ export * from './components/ui/toggle-group'
 export * from './components/ui/tooltip'
 // Layout — ready-made dashboard shell + router-neutral pieces
 export * from './components/layout'
+// Page — Polaris-style page header + in-page column layout + action bars
+export * from './components/page'
 // Composed components
 export * from './components/data-table'
 export { ConfirmDialog } from './components/confirm-dialog'

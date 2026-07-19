@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
+import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
@@ -43,6 +44,12 @@ export type ButtonProps = Omit<
 > &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean
+    /** Show a spinner and disable the button while an action is in flight. */
+    loading?: boolean
+    /** Leading icon component (e.g. a lucide icon). Hidden while `loading`. */
+    icon?: React.ElementType
+    /** Trailing icon component. */
+    iconRight?: React.ElementType
   }
 
 function Button({
@@ -50,16 +57,37 @@ function Button({
   variant,
   size,
   asChild = false,
+  loading = false,
+  icon: Icon,
+  iconRight: IconRight,
+  disabled,
+  children,
   ...props
 }: ButtonProps) {
-  const Comp = asChild ? Slot : 'button'
+  const classes = cn(buttonVariants({ variant, size, className }))
+
+  // With asChild the single child owns rendering; icon/loading don't apply
+  // (injecting extra nodes would break Slot's single-child contract).
+  if (asChild) {
+    return (
+      <Slot data-slot='button' className={classes} {...props}>
+        {children}
+      </Slot>
+    )
+  }
 
   return (
-    <Comp
+    <button
       data-slot='button'
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={classes}
+      disabled={disabled || loading}
+      data-loading={loading || undefined}
       {...props}
-    />
+    >
+      {loading ? <Loader2 className='animate-spin' /> : Icon ? <Icon /> : null}
+      {children}
+      {IconRight && !loading ? <IconRight /> : null}
+    </button>
   )
 }
 

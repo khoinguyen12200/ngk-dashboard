@@ -29,6 +29,9 @@ import {
   Switch,
   Textarea,
   Toggle,
+  Page,
+  Layout,
+  PageActions,
 } from '@/index'
 
 // Render smoke tests: every one of these must mount without throwing. Cheap,
@@ -86,5 +89,27 @@ describe('components render without crashing', () => {
     )
     expect(getByText('Section')).toBeInTheDocument()
     expect(getByText('Home')).toBeInTheDocument()
+  })
+
+  it('renders a Polaris-style Page with actions + Layout', () => {
+    const { getByText, getByRole } = render(
+      <Page
+        title='Orders'
+        subtitle='All orders'
+        primaryAction={{ content: 'Save', onClick: () => {} }}
+        secondaryActions={[{ content: 'Export' }]}
+      >
+        <Layout>
+          <Layout.Section>Main</Layout.Section>
+          <Layout.Section variant='oneThird'>Aside</Layout.Section>
+        </Layout>
+        <PageActions primaryAction={{ content: 'Done' }} />
+      </Page>
+    )
+    expect(getByRole('heading', { name: 'Orders' })).toBeInTheDocument()
+    expect(getByText('Save')).toBeInTheDocument()
+    expect(getByText('Export')).toBeInTheDocument()
+    expect(getByText('Main')).toBeInTheDocument()
+    expect(getByText('Aside')).toBeInTheDocument()
   })
 })

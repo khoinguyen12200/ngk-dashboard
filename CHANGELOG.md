@@ -4,6 +4,22 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## 1.1.0
+
+### Added
+
+- **Polaris-style prebuilt page scaffolding** so a screen is a few lines:
+  - `Page` — title bar with title/subtitle/metadata, back action, and primary +
+    secondary actions (described as `{ content, onClick }` or passed as nodes),
+    with a sensible centered max-width (`fullWidth` / `narrowWidth` to override).
+  - `Layout` + `Layout.Section` — main column with a smaller `oneThird`/`oneHalf`
+    aside on the right; stacks on mobile. Compound `Layout.Section` API plus
+    tree-shakeable `LayoutSection` named export.
+  - `PageActions` — footer action bar (secondary left, primary right).
+  - Available on the `ngk-dashboard/page` subpath.
+- **Button conveniences**: `loading` (spinner + auto-disable), `icon`, and
+  `iconRight` props.
+
 ## 1.0.0
 
 First stable release. Focuses on correctness and quality gaps that only surface
