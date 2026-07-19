@@ -51,12 +51,21 @@ Everything flips automatically. There's no theme provider to wire up.
 
 ## What's included
 
-Primitives: Alert, AlertDialog, Avatar, Badge, Button, Calendar, Card,
-Checkbox, Collapsible, Command, Dialog, DropdownMenu, Form, Input, InputOTP,
-Label, Popover, RadioGroup, ScrollArea, Select, Separator, Sheet, Sidebar,
-Skeleton, Switch, Table, Tabs, Textarea, Toaster (Sonner), Tooltip.
+Full shadcn/ui parity — every primitive in the registry:
 
-Helpers: `cn`, `useIsMobile`, and a few small utilities.
+Accordion, Alert, AlertDialog, AspectRatio, Avatar, Badge, Breadcrumb, Button,
+Calendar, Card, Carousel, Chart (Recharts), Checkbox, Collapsible, Command,
+ContextMenu, Dialog, Drawer, DropdownMenu, Form, HoverCard, Input, InputOTP,
+Label, Menubar, NavigationMenu, Pagination, Popover, Progress, RadioGroup,
+Resizable, ScrollArea, Select, Separator, Sheet, Sidebar, Skeleton, Slider,
+Switch, Table, Tabs, Textarea, Toaster (Sonner), Toggle, ToggleGroup, Tooltip.
+
+Composed dashboard components: DataTable (TanStack Table — column header,
+toolbar, faceted filter, view options, pagination, bulk actions), DatePicker,
+ConfirmDialog, PasswordInput, LongText.
+
+Helpers: `cn`, `useIsMobile`, `getPageNumbers`, `getDisplayNameInitials`,
+`sleep`.
 
 ### Notes
 
