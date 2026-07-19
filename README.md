@@ -2,10 +2,10 @@
 
 A ready-to-use React component library. Themed [shadcn/ui](https://ui.shadcn.com) primitives with dark mode baked in — install, import one stylesheet, and use the components. No Tailwind or shadcn setup required in your app.
 
-> **Building a dashboard?** Read **[BEST_PRACTICES.md](./BEST_PRACTICES.md)** —
-> the opinionated guide to using this package the right way (setup, screen
-> anatomy, forms, data states, actions, theming). The sections below are the
-> per-feature reference.
+> **Docs:** **[BEST_PRACTICES.md](./BEST_PRACTICES.md)** is the opinionated guide
+> to building a dashboard the right way. **[COMPONENTS.md](./COMPONENTS.md)** is
+> the per-component reference — every export, its props, and a usage snippet. The
+> sections below are quick recipes.
 
 ## Install
 
