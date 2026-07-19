@@ -497,13 +497,15 @@ const sidebarMenuButtonVariants = cva(
   }
 )
 
-export interface SidebarMenuButtonProps
-  extends React.ComponentProps<'button'>,
-    VariantProps<typeof sidebarMenuButtonVariants> {
-  asChild?: boolean
-  isActive?: boolean
-  tooltip?: string | React.ComponentProps<typeof TooltipContent>
-}
+export type SidebarMenuButtonProps = Omit<
+  React.ComponentProps<'button'>,
+  keyof VariantProps<typeof sidebarMenuButtonVariants>
+> &
+  VariantProps<typeof sidebarMenuButtonVariants> & {
+    asChild?: boolean
+    isActive?: boolean
+    tooltip?: string | React.ComponentProps<typeof TooltipContent>
+  }
 
 function SidebarMenuButton({
   asChild = false,
@@ -678,7 +680,7 @@ function SidebarMenuSubButton({
   isActive = false,
   className,
   ...props
-}: React.ComponentProps<'a'> & {
+}: Omit<React.ComponentProps<'a'>, 'variant'> & {
   asChild?: boolean
   size?: 'sm' | 'md'
   isActive?: boolean

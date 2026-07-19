@@ -40,29 +40,60 @@ src/
   It resolves via tsconfig `paths` and the tsup esbuild alias — never use deep
   relative paths like `../../lib/utils`.
 - **`cn()` for all className merging.** Never concatenate class strings by hand.
-- **Variants via `cva`** with a `VariantProps<typeof xVariants>` type, matching
-  the pattern in `button.tsx`. Export the variants object when it's reusable
-  (e.g. `export { Button, buttonVariants }`).
+- **Variants via `cva`**, exported as a named props type. When the props extend
+  an **intrinsic** element (`<button>`, `<a>`, `<span>`, `<div>`) you MUST strip
+  the cva-owned keys from the native props, or a consumer's ambient JSX
+  augmentation (e.g. Shopify App Bridge adds its own `variant` to `<button>`)
+  collapses your variant union. This is a shipped-as-a-package hazard shadcn's
+  copy-into-your-app source ignores. Pattern:
+  ```ts
+  export type ButtonProps = Omit<
+    React.ComponentProps<'button'>,
+    keyof VariantProps<typeof buttonVariants>
+  > &
+    VariantProps<typeof buttonVariants> & { asChild?: boolean }
+  ```
+  Radix-primitive props (`ComponentProps<typeof X.Root>`) are NOT augmented, so
+  they don't need `Omit` (and `Omit` breaks discriminated unions like
+  ToggleGroup's `type`). `type-tests/variant-collision.ts` guards this — keep it
+  green.
 - **Function components, not `forwardRef`.** These are shadcn's newer
   `data-slot` components: type props as `React.ComponentProps<'element'>` and
-  add a `data-slot="name"` attribute. Match the existing files.
-- **Every new export must be added to `src/index.ts`** or it won't ship.
+  add a `data-slot="name"` attribute. The `data-slot` is load-bearing — the
+  scoped CSS base layer targets it (see below).
+- **Register every new component in TWO places:** `src/index.ts` (barrel) and,
+  for a new subpath, the `exports` map in `package.json`. A `ui/*` component is
+  covered by the wildcard; new top-level dirs need an explicit `exports` entry.
 - **Styling uses theme tokens**, never hardcoded colors — `bg-primary`,
   `text-muted-foreground`, `border-border`, etc. If a token is missing, add it
   to `src/theme.css` for *both* `:root` and `.dark`.
 - **Dark mode is class-based** (`.dark` on an ancestor). No theme provider.
 - Match the existing formatting: single quotes, no semicolons, 2-space indent.
 
+## CSS strategy
+
+`src/styles.css` ships Tailwind theme + utilities but **not Preflight** — this
+library gets embedded in apps with their own global CSS (Polaris, storefronts),
+so a global reset is off-limits. The base layer is scoped to `[data-slot]`
+subtrees. Consequences to remember:
+- New components must carry a `data-slot` on their root so the scoped base
+  (box-sizing, themed border color) reaches them.
+- Never add a global (`*`, `body`, bare `button`) rule to `styles.css` — scope
+  it under `[data-slot]`.
+- Sonner styles are compiled in via `@import 'sonner/dist/styles.css'`.
+
 ## Workflow
 
-Before considering any change done:
+Before considering any change done, run the full gate:
 
 ```bash
-npm run typecheck   # tsc --noEmit — must pass clean
-npm run build       # produces dist/index.js, dist/index.d.ts, dist/styles.css
+npm run verify   # format:check + typecheck + test:types + test
+npm run build    # index + per-component subpaths + styles.css
 ```
 
-`/verify` runs both. When adding a primitive, prefer `/add-component`.
+`/verify` runs the gate. When adding a primitive, prefer `/add-component`. CI
+(`.github/workflows/ci.yml`) runs `verify` + `build` on every push and PR, so
+keep them green locally.
 
 ## Releasing
 

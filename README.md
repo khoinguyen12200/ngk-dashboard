@@ -38,6 +38,28 @@ export function Example() {
 }
 ```
 
+### Narrow (subpath) imports
+
+The barrel above tree-shakes in any modern bundler (the package is ESM with
+side effects scoped to CSS). If you want to be explicit — or you're pulling in
+just one heavy component — import from its subpath so nothing else is even
+resolved:
+
+```tsx
+import { Button } from 'ngk-dashboard/ui/button'   // no recharts/embla/vaul
+import { ChartContainer } from 'ngk-dashboard/ui/chart'
+import { DashboardLayout } from 'ngk-dashboard/layout'
+import { DataTablePagination } from 'ngk-dashboard/data-table'
+```
+
+### Embedding safety
+
+The stylesheet ships Tailwind's theme + utilities **without** Preflight (the
+global reset). Its base rules are scoped to this library's own elements, so
+importing `ngk-dashboard/styles.css` is safe next to Polaris, a storefront, or
+any app with its own global CSS — it won't reset your margins, headings, or box
+sizing.
+
 ## Dark mode
 
 The theme ships as CSS variables plus a `.dark` variant. Toggle dark mode by
@@ -352,8 +374,17 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
 ```bash
 npm install
-npm run build      # builds dist/index.js, dist/index.d.ts, dist/styles.css
+npm run dev          # tsup watch
+npm run build        # dist/index.js, dist/index.d.ts, dist/styles.css + subpaths
+npm run verify       # typecheck + type-regression + unit/smoke tests (CI gate)
+npm test             # vitest
+npm run test:types   # type-level regression suite (type-tests/)
+npm run format       # prettier --write
 ```
+
+Every push and PR runs `verify` in CI (`.github/workflows/ci.yml`). Add
+components with `/add-component`; the barrel (`src/index.ts`) and the `exports`
+map in `package.json` are the two places a new component must be registered.
 
 ## Releasing
 

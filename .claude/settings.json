@@ -17,9 +17,6 @@
       "Bash(git show:*)",
       "Read(//Users/nguyenkhoi/Projects/ngk-dashboard/**)"
     ],
-    "deny": [
-      "Read(./.env)",
-      "Read(./.env.*)"
-    ]
+    "deny": ["Read(./.env)", "Read(./.env.*)"]
   }
 }

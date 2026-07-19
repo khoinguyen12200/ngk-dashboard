@@ -35,7 +35,7 @@ function BreadcrumbLink({
   asChild,
   className,
   ...props
-}: React.ComponentProps<'a'> & {
+}: Omit<React.ComponentProps<'a'>, 'variant'> & {
   asChild?: boolean
 }) {
   const Comp = asChild ? Slot.Root : 'a'

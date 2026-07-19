@@ -34,11 +34,16 @@ const buttonVariants = cva(
   }
 )
 
-export interface ButtonProps
-  extends React.ComponentProps<'button'>,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean
-}
+// Omit the cva-owned keys from the native props so they can't collide with a
+// consumer's ambient JSX augmentation of <button> (e.g. Shopify App Bridge
+// adds its own `variant`). A published library must own the keys its cva defines.
+export type ButtonProps = Omit<
+  React.ComponentProps<'button'>,
+  keyof VariantProps<typeof buttonVariants>
+> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean
+  }
 
 function Button({
   className,

@@ -18,9 +18,11 @@ const alertVariants = cva(
   }
 )
 
-export interface AlertProps
-  extends React.ComponentProps<'div'>,
-    VariantProps<typeof alertVariants> {}
+export type AlertProps = Omit<
+  React.ComponentProps<'div'>,
+  keyof VariantProps<typeof alertVariants>
+> &
+  VariantProps<typeof alertVariants>
 
 function Alert({ className, variant, ...props }: AlertProps) {
   return (

@@ -1,6 +1,19 @@
-@import 'tailwindcss';
+/* ngk-dashboard stylesheet.
+ *
+ * Ships Tailwind's theme + utilities WITHOUT Preflight. Preflight is a global
+ * reset (margins, box-sizing, heading/list styles) that leaks into whatever app
+ * embeds this library — fatal next to Polaris or a storefront's own CSS. Here
+ * the base layer is scoped to this library's own elements (everything is rooted
+ * at a `data-slot`), so importing the stylesheet never touches host styles. */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
 @import 'tw-animate-css';
 @import './theme.css';
+
+/* Compile Sonner's styles in, rather than relying on its runtime <style>
+ * injection (which a strict CSP or shadow DOM can block). */
+@import 'sonner/dist/styles.css';
 
 /* Scan the library's own components so their utility classes ship in the
    compiled stylesheet. Consumers need no Tailwind setup of their own. */
@@ -10,33 +23,40 @@
 @custom-variant dark (&:is(.dark *));
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+  /* Scoped reset: only elements inside this library's components (rooted at a
+     data-slot) get box-sizing + the themed default border color. `border`
+     utilities need this to pick up the token instead of currentColor. No global
+     selector, so nothing leaks onto the host app. */
+  [data-slot],
+  [data-slot] * {
+    box-sizing: border-box;
+    border-color: var(--border);
+    outline-color: color-mix(in oklab, var(--ring) 50%, transparent);
+  }
+
+  [data-slot] {
     scrollbar-width: thin;
     scrollbar-color: var(--border) transparent;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
 
-  /* Override Radix scroll locking for sticky headers */
-  body[data-scroll-locked] {
-    overflow: unset !important;
-  }
-
-  /* Cursor pointer for buttons */
-  button:not(:disabled),
-  [role='button']:not(:disabled) {
+  /* Buttons rendered by the library get a pointer cursor. */
+  [data-slot] button:not(:disabled),
+  [data-slot][role='button']:not(:disabled) {
     cursor: pointer;
   }
 
-  /* Prevent focus zoom on mobile devices */
+  /* Prevent focus zoom on mobile for the library's own inputs. */
   @media screen and (max-width: 767px) {
-    input,
-    select,
-    textarea {
+    [data-slot] input,
+    [data-slot] select,
+    [data-slot] textarea {
       font-size: 16px !important;
     }
+  }
+
+  /* Radix scroll-lock breaks sticky headers; opt this library out. */
+  body[data-scroll-locked] {
+    overflow: unset !important;
   }
 }
 

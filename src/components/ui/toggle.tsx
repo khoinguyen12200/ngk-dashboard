@@ -28,6 +28,8 @@ const toggleVariants = cva(
   }
 )
 
+// Radix component props (not intrinsic <button>) are not subject to ambient
+// JSX augmentation, so no Omit is needed here.
 export type ToggleProps = React.ComponentProps<typeof TogglePrimitive.Root> &
   VariantProps<typeof toggleVariants>
 

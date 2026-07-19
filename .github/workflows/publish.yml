@@ -34,8 +34,8 @@ jobs:
           fi
           echo "Publishing $TAG"
 
-      - name: Typecheck
-        run: npm run typecheck
+      - name: Verify (typecheck + type-regression + tests)
+        run: npm run verify
 
       - name: Publish
         # prepublishOnly runs the build; --provenance attaches a signed
