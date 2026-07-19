@@ -4,6 +4,21 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## 1.3.0
+
+### Added
+
+Polaris-style content primitives so you rarely hand-write flexbox or type again:
+
+- **`BlockStack` / `InlineStack`** — gap-based vertical/horizontal spacing with
+  `gap`, `align`, `justify` (and `wrap` for inline).
+- **`Text`** — typographic scale (`headingXl`…`bodySm`) with `tone`, `weight`,
+  `alignment`, `truncate`, and a sensible default element per variant.
+- **`Banner`** — status callout (`info`/`success`/`warning`/`critical`) with
+  title, icon, and optional dismiss.
+- **`EmptyState`** — centered placeholder for empty/zero-result screens.
+- **`SkeletonPage`** — page-shaped loading scaffold.
+
 ## 1.2.0
 
 ### Added

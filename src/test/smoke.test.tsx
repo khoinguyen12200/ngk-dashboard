@@ -33,6 +33,12 @@ import {
   Layout,
   PageActions,
   ThemeProvider,
+  BlockStack,
+  InlineStack,
+  Text,
+  Banner,
+  EmptyState,
+  SkeletonPage,
 } from '@/index'
 
 // Render smoke tests: every one of these must mount without throwing. Cheap,
@@ -129,5 +135,29 @@ describe('components render without crashing', () => {
     expect(root.style.getPropertyValue('--primary')).toBe('#5b5bd6')
     expect(root.style.getPropertyValue('--radius')).toBe('0.5rem')
     expect(root.style.fontFamily).toBe('Inter, sans-serif')
+  })
+
+  it('renders content primitives (stacks, text, banner, empty state)', () => {
+    const { getByText, getByRole } = render(
+      <BlockStack gap={4}>
+        <Text variant='headingLg'>Dashboard</Text>
+        <InlineStack gap={2} justify='between'>
+          <Text tone='subdued'>Subtitle</Text>
+          <Text>Right</Text>
+        </InlineStack>
+        <Banner tone='success' title='Saved'>
+          Your changes are live.
+        </Banner>
+        <EmptyState heading='No data'>Nothing here yet.</EmptyState>
+      </BlockStack>
+    )
+    expect(getByRole('heading', { name: 'Dashboard' })).toBeInTheDocument()
+    expect(getByText('Saved')).toBeInTheDocument()
+    expect(getByText('No data')).toBeInTheDocument()
+  })
+
+  it('renders a SkeletonPage', () => {
+    const { container } = render(<SkeletonPage primaryAction sections={2} />)
+    expect(container.querySelector('[data-slot="skeleton-page"]')).toBeTruthy()
   })
 })

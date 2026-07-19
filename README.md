@@ -229,7 +229,9 @@ Resizable, ScrollArea, Select, Separator, Sheet, Sidebar, Skeleton, Slider,
 Switch, Table, Tabs, Textarea, Toaster (Sonner), Toggle, ToggleGroup, Tooltip.
 
 Layout: DashboardLayout (ready-made shell) plus the router-neutral pieces
-Header, Main, NavGroup, TopNav.
+Header, Main, NavGroup, TopNav. Page scaffolding: Page, Layout/Layout.Section,
+PageActions. Content primitives: BlockStack, InlineStack (gap-based spacing),
+Text (type scale), Banner, EmptyState, SkeletonPage. Theming: ThemeProvider.
 
 Composed dashboard components: DataTable (TanStack Table — column header,
 toolbar, faceted filter, view options, pagination, bulk actions), DatePicker,
