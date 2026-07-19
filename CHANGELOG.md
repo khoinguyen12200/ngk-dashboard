@@ -4,6 +4,21 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## 1.7.0
+
+State and affordance props extended beyond Card to the elements that need them.
+
+### Added
+
+- **Input**: `icon` (leading), `prefix` / `suffix` addons, `loading` (trailing
+  spinner), `clearable` + `onClear`, and `error`. Stays a bare `<input>` when no
+  addons are used (unchanged behavior).
+- **Textarea**: `error` and `showCount` (live character counter with `maxLength`).
+- **Button**: `fullWidth`.
+- **Badge**: semantic tones `success` / `warning` / `info`, plus a `dot` status
+  indicator.
+- **SelectTrigger**: `error`.
+
 ## 1.6.0
 
 ### Added

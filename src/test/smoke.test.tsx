@@ -218,6 +218,42 @@ describe('components render without crashing', () => {
     expect(container.querySelectorAll('[data-slot="skeleton"]').length).toBe(6)
   })
 
+  it('Input supports icon/clearable/loading/error addons', () => {
+    const onClear = vi.fn()
+    const { getByRole, getByPlaceholderText } = render(
+      <Input
+        placeholder='Search'
+        error
+        clearable
+        onClear={onClear}
+        value='abc'
+        onChange={() => {}}
+      />
+    )
+    expect(getByPlaceholderText('Search')).toHaveAttribute(
+      'aria-invalid',
+      'true'
+    )
+    getByRole('button', { name: 'Clear' }).click()
+    expect(onClear).toHaveBeenCalledOnce()
+  })
+
+  it('Textarea shows a character count', () => {
+    const { getByText } = render(
+      <Textarea showCount maxLength={100} defaultValue='hello' />
+    )
+    expect(getByText('5 / 100')).toBeInTheDocument()
+  })
+
+  it('Badge supports semantic tone + dot', () => {
+    const { getByText } = render(
+      <Badge variant='success' dot>
+        Active
+      </Badge>
+    )
+    expect(getByText('Active')).toBeInTheDocument()
+  })
+
   it('SaveBar shows Save/Discard when open and nothing when closed', () => {
     const { queryByText, rerender } = render(<SaveBar open={false} />)
     expect(queryByText('Save')).toBeNull()

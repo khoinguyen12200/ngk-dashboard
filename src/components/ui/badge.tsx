@@ -16,6 +16,11 @@ const badgeVariants = cva(
           'border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
         outline:
           'text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground',
+        success:
+          'border-transparent bg-emerald-500/15 text-emerald-700 dark:text-emerald-400',
+        warning:
+          'border-transparent bg-amber-500/15 text-amber-700 dark:text-amber-400',
+        info: 'border-transparent bg-primary/15 text-primary',
       },
     },
     defaultVariants: {
@@ -30,9 +35,18 @@ export type BadgeProps = Omit<
 > &
   VariantProps<typeof badgeVariants> & {
     asChild?: boolean
+    /** Leading status dot, colored to match the text. */
+    dot?: boolean
   }
 
-function Badge({ className, variant, asChild = false, ...props }: BadgeProps) {
+function Badge({
+  className,
+  variant,
+  asChild = false,
+  dot = false,
+  children,
+  ...props
+}: BadgeProps) {
   const Comp = asChild ? Slot : 'span'
 
   return (
@@ -40,7 +54,17 @@ function Badge({ className, variant, asChild = false, ...props }: BadgeProps) {
       data-slot='badge'
       className={cn(badgeVariants({ variant }), className)}
       {...props}
-    />
+    >
+      {/* asChild forwards to a single child element, so the dot only applies
+          to the plain <span> form. */}
+      {dot && !asChild && (
+        <span
+          aria-hidden='true'
+          className='size-1.5 rounded-full bg-current opacity-80'
+        />
+      )}
+      {children}
+    </Comp>
   )
 }
 

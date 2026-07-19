@@ -50,6 +50,8 @@ export type ButtonProps = Omit<
     icon?: React.ElementType
     /** Trailing icon component. */
     iconRight?: React.ElementType
+    /** Stretch to the full width of the container. */
+    fullWidth?: boolean
   }
 
 function Button({
@@ -60,11 +62,16 @@ function Button({
   loading = false,
   icon: Icon,
   iconRight: IconRight,
+  fullWidth = false,
   disabled,
   children,
   ...props
 }: ButtonProps) {
-  const classes = cn(buttonVariants({ variant, size, className }))
+  const classes = cn(
+    buttonVariants({ variant, size }),
+    fullWidth && 'w-full',
+    className
+  )
 
   // With asChild the single child owns rendering; icon/loading don't apply
   // (injecting extra nodes would break Slot's single-child contract).

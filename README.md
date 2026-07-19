@@ -109,6 +109,28 @@ and `icon` / `iconRight`:
 Pair this with `DashboardLayout` (the app shell) below: the sidebar/header wrap
 the app, and each screen renders a `Page` inside it.
 
+## Form field states
+
+The form primitives carry the states a real form needs — no wrapper markup:
+
+```tsx
+import { Input, Textarea, Button, Badge } from 'ngk-dashboard'
+import { Search } from 'lucide-react'
+
+<Input icon={Search} placeholder="Search orders" clearable onClear={clear} />
+<Input prefix="https://" suffix=".myshopify.com" />
+<Input loading={checking} error={!available} />       {/* async check + invalid */}
+
+<Textarea showCount maxLength={280} error={tooLong} />  {/* live counter */}
+
+<Button fullWidth loading={saving}>Save</Button>
+
+<Badge variant="success" dot>Active</Badge>            {/* success | warning | info */}
+```
+
+Input props: `icon`, `prefix`, `suffix`, `loading`, `clearable`/`onClear`,
+`error`. Textarea: `error`, `showCount`. Select: `<SelectTrigger error />`.
+
 ## Card states
 
 The Card carries its own interactive states, so you don't hand-wire overlays.
