@@ -1,6 +1,8 @@
 import * as React from 'react'
+import { createPortal } from 'react-dom'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { usePageHeaderSlots } from '@/components/layout/page-header-context'
 
 export interface SaveBarProps extends React.ComponentProps<'div'> {
   /** Show the bar (wire this to your form's dirty state). */
@@ -20,9 +22,11 @@ export interface SaveBarProps extends React.ComponentProps<'div'> {
 }
 
 /**
- * Contextual save bar — the Shopify/Polaris pattern. Pin it at the top of a
- * page and open it when a form goes dirty; it offers Discard + Save. Controlled:
- * pair `open` with your form state (e.g. react-hook-form's `formState.isDirty`).
+ * Contextual save bar — the Shopify/Polaris pattern. Open it when a form goes
+ * dirty; it offers Discard + Save. Inside a DashboardLayout it takes over the
+ * top header bar (rather than adding a second strip); used standalone it pins
+ * itself to the top of the page. Controlled: pair `open` with your form state
+ * (e.g. react-hook-form's `formState.isDirty`).
  *
  *   <SaveBar
  *     open={form.formState.isDirty}
@@ -43,20 +47,18 @@ export function SaveBar({
   className,
   ...props
 }: SaveBarProps) {
-  if (!open) return null
-  return (
-    <div
-      data-slot='save-bar'
-      role='region'
-      aria-label='Unsaved changes'
-      className={cn(
-        'sticky top-0 z-50 flex items-center gap-3 border-b bg-background/95 px-4 py-2.5 shadow-sm backdrop-blur',
-        'animate-in fade-in slide-in-from-top-2',
-        className
-      )}
-      {...props}
-    >
-      <span className='text-sm font-medium'>{message}</span>
+  const slots = usePageHeaderSlots()
+  const setSaveBarOpen = slots?.setSaveBarOpen
+
+  React.useEffect(() => {
+    if (!setSaveBarOpen) return
+    setSaveBarOpen(open)
+    return () => setSaveBarOpen(false)
+  }, [open, setSaveBarOpen])
+
+  const content = (
+    <>
+      <span className='truncate text-sm font-medium'>{message}</span>
       <div className='ms-auto flex items-center gap-2'>
         <Button
           variant='outline'
@@ -75,6 +77,29 @@ export function SaveBar({
           {saveLabel}
         </Button>
       </div>
+    </>
+  )
+
+  // Inside a DashboardLayout: take over the header bar via its overlay outlet.
+  if (slots?.overlayNode) {
+    return open ? createPortal(content, slots.overlayNode) : null
+  }
+
+  // Standalone: pin to the top of the page.
+  if (!open) return null
+  return (
+    <div
+      data-slot='save-bar'
+      role='region'
+      aria-label='Unsaved changes'
+      className={cn(
+        'sticky top-0 z-50 flex items-center gap-3 border-b bg-background/95 px-4 py-2.5 shadow-sm backdrop-blur',
+        'animate-in fade-in slide-in-from-top-2',
+        className
+      )}
+      {...props}
+    >
+      {content}
     </div>
   )
 }

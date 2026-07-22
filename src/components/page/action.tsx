@@ -18,7 +18,7 @@ export type ActionDescriptor = {
 
 export type Action = ActionDescriptor | React.ReactNode
 
-function isDescriptor(action: Action): action is ActionDescriptor {
+export function isDescriptor(action: Action): action is ActionDescriptor {
   return (
     !!action &&
     typeof action === 'object' &&

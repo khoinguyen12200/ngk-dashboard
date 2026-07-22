@@ -1,5 +1,5 @@
 export { Page } from './page'
-export type { PageProps, BackAction } from './page'
+export type { PageProps, BackAction, Crumb } from './page'
 export { Layout, LayoutSection } from './layout'
 export type { LayoutSectionProps } from './layout'
 export { PageActions } from './page-actions'

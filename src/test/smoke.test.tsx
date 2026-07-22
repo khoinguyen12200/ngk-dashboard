@@ -34,6 +34,7 @@ import {
   Layout,
   PageActions,
   SaveBar,
+  DashboardLayout,
   ThemeProvider,
   BlockStack,
   InlineStack,
@@ -122,6 +123,42 @@ describe('components render without crashing', () => {
     expect(getByText('Export')).toBeInTheDocument()
     expect(getByText('Main')).toBeInTheDocument()
     expect(getByText('Aside')).toBeInTheDocument()
+  })
+
+  it('projects Page title + actions into the DashboardLayout header', () => {
+    const onSave = vi.fn()
+    const { getByRole, getByText, getAllByRole } = render(
+      <DashboardLayout nav={[{ items: [{ title: 'Home', href: '/' }] }]} fixed>
+        <Page
+          title='Orders'
+          breadcrumbs={[{ label: 'Shop', href: '/shop' }]}
+          primaryAction={{ content: 'Publish', onClick: () => {} }}
+          secondaryActions={[{ content: 'Export' }]}
+        >
+          Body content
+        </Page>
+        <SaveBar open message='Unsaved changes' onSave={onSave} />
+      </DashboardLayout>
+    )
+    // Title renders once (in the top header); body still renders below.
+    expect(getByRole('heading', { name: 'Orders' })).toBeInTheDocument()
+    expect(getByText('Body content')).toBeInTheDocument()
+    // Actions project into the header (rendered for both desktop + mobile,
+    // one visible via CSS) — at least one is present.
+    expect(getAllByRole('button', { name: 'Publish' }).length).toBeGreaterThan(
+      0
+    )
+    // SaveBar takes over the header when open.
+    expect(getByText('Unsaved changes')).toBeInTheDocument()
+    expect(getAllByRole('button', { name: 'Save' }).length).toBeGreaterThan(0)
+  })
+
+  it('renders an indeterminate Checkbox without crashing', () => {
+    const { container } = render(<Checkbox checked='indeterminate' />)
+    expect(container.querySelector('[data-slot="checkbox"]')).toHaveAttribute(
+      'data-state',
+      'indeterminate'
+    )
   })
 
   it('ThemeProvider sets brand CSS variables on its subtree', () => {

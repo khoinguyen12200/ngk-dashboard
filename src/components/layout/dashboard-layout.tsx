@@ -12,6 +12,7 @@ import { Header } from './header'
 import { Main } from './main'
 import { NavGroup } from './nav-group'
 import { defaultRenderLink } from './render-link'
+import { PageHeaderContext } from './page-header-context'
 import type { NavGroup as NavGroupType, RenderLink } from './types'
 
 export interface DashboardLayoutProps {
@@ -64,6 +65,25 @@ export function DashboardLayout({
   defaultOpen = true,
   className,
 }: DashboardLayoutProps) {
+  const [titleNode, setTitleNode] = React.useState<HTMLElement | null>(null)
+  const [actionsNode, setActionsNode] = React.useState<HTMLElement | null>(null)
+  const [overlayNode, setOverlayNode] = React.useState<HTMLElement | null>(null)
+  const [saveBarOpen, setSaveBarOpen] = React.useState(false)
+
+  const slots = React.useMemo(
+    () => ({
+      titleNode,
+      actionsNode,
+      overlayNode,
+      setTitleNode,
+      setActionsNode,
+      setOverlayNode,
+      saveBarOpen,
+      setSaveBarOpen,
+    }),
+    [titleNode, actionsNode, overlayNode, saveBarOpen]
+  )
+
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <Sidebar collapsible={collapsible} variant={variant}>
@@ -81,17 +101,16 @@ export function DashboardLayout({
         {sidebarFooter && <SidebarFooter>{sidebarFooter}</SidebarFooter>}
         <SidebarRail />
       </Sidebar>
-      <SidebarInset>
-        <Header fixed={fixed}>
-          {headerStart}
-          {headerEnd && (
-            <div className='ms-auto flex items-center gap-2'>{headerEnd}</div>
-          )}
-        </Header>
-        <Main fixed={fixed} className={className}>
-          {children}
-        </Main>
-      </SidebarInset>
+      <PageHeaderContext.Provider value={slots}>
+        <SidebarInset>
+          <Header fixed={fixed} end={headerEnd}>
+            {headerStart}
+          </Header>
+          <Main fixed={fixed} className={className}>
+            {children}
+          </Main>
+        </SidebarInset>
+      </PageHeaderContext.Provider>
     </SidebarProvider>
   )
 }

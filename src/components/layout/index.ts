@@ -9,6 +9,8 @@ export type { NavGroupProps } from './nav-group'
 export { TopNav } from './top-nav'
 export type { TopNavProps, TopNavLink } from './top-nav'
 export { defaultRenderLink, checkIsActive } from './render-link'
+export { usePageHeaderSlots } from './page-header-context'
+export type { PageHeaderSlots } from './page-header-context'
 export type {
   NavItem,
   NavLink,
